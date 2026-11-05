@@ -11,10 +11,10 @@ namespace EnhancedBossesRedone.StatusEffects
             m_ttl = m_baseTTL;
         }
 
-        public override void ModifySpeed(float baseSpeed, ref float speed)
+        public override void ModifySpeed(float baseSpeed, ref float speed, Character character, Vector3 dir)
         {
             speed *= speedAmount;
-            base.ModifySpeed(baseSpeed, ref speed);
+            base.ModifySpeed(baseSpeed, ref speed, character, dir);
         }
 
         public static float m_baseTTL = 1f;
