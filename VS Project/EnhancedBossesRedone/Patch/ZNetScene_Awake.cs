@@ -1,6 +1,8 @@
 ﻿using EnhancedBossesRedone.Abstract;
 using EnhancedBossesRedone.Data;
 using HarmonyLib;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace EnhancedBossesRedone.Patch
 {
@@ -21,6 +23,7 @@ namespace EnhancedBossesRedone.Patch
                 ConfigManager.ParseJson();
                 ObjectDB objectDB = ObjectDB_Awake.ObjectDB_Awake_Postfix.FejdObjectDB.GetComponent<ObjectDB>();
 
+                RestoreSupportedShaders();
                 LoadModdedAssets(__instance);
                 
                 SetupBosses(__instance, objectDB);
@@ -48,6 +51,43 @@ namespace EnhancedBossesRedone.Patch
                 {
                     entity.Setup(instance);
                     entity.AddToPrefabs(instance);
+                }
+            }
+
+            private static void RestoreSupportedShaders()
+            {
+                Dictionary<string, Shader> shaders = new Dictionary<string, Shader>();
+                foreach (Shader shader in Resources.FindObjectsOfTypeAll<Shader>())
+                {
+                    if (shader.isSupported)
+                    {
+                        shaders[shader.name] = shader;
+                    }
+                }
+
+                foreach (GameObject prefab in Main.Bundle!.LoadAllAssets<GameObject>())
+                {
+                    foreach (Renderer renderer in prefab.GetComponentsInChildren<Renderer>(true))
+                    {
+                        foreach (Material material in renderer.sharedMaterials)
+                        {
+                            if (material == null || material.shader == null || material.shader.isSupported)
+                            {
+                                continue;
+                            }
+
+                            string shaderName = material.shader.name;
+                            if (shaders.TryGetValue(shaderName, out Shader replacement))
+                            {
+                                material.shader = replacement;
+                                Main.Log!.LogInfo("Restored shader " + shaderName + " on " + prefab.name);
+                            }
+                            else
+                            {
+                                Main.Log!.LogWarning("No supported shader " + shaderName + " for " + prefab.name);
+                            }
+                        }
+                    }
                 }
             }
         }

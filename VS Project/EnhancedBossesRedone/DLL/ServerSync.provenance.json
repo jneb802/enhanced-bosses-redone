@@ -1,0 +1,7 @@
+{
+  "repository": "https://github.com/jneb802/ServerSync",
+  "upstream": "https://github.com/blaxxun-boop/ServerSync",
+  "commit": "402f819a3b95a06520571e048b5e1e3db193c856",
+  "build": "dotnet build ServerSync.csproj -c Release",
+  "reason": "Valheim 1.0 routed RPC target and connection error UI compatibility"
+}

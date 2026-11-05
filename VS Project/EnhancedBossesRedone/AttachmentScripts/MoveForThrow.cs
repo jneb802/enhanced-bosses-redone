@@ -145,7 +145,7 @@ namespace EnhancedBossesRedone.AttachmentScripts
             Vector3 direction = (targetPosition - gameObject.transform.position) + 3 * Vector3.up;
 
             Instantiate(ZNetScene.instance.GetPrefab("fx_sledge_demolisher_hit"), gameObject.transform.position, Quaternion.identity);
-            rb!.velocity = 1.6f * direction;
+            rb!.linearVelocity = 1.6f * direction;
             impact!.m_maxVelocity = 1.6f * direction.magnitude + 10;
 
             StopTornado();

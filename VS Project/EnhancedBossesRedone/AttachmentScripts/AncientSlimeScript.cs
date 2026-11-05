@@ -19,7 +19,10 @@ namespace EnhancedBossesRedone.AttachmentScripts
             }
 
             bonemass = TryGetBonemass();
-            KillIfBonemassNotPresent();
+            if (KillIfBonemassNotPresent())
+            {
+                return;
+            }
 
             initialDistance = GetDistanceFromBonemass();
             heightToReach = Random.Range(6f, 10f);
@@ -47,7 +50,10 @@ namespace EnhancedBossesRedone.AttachmentScripts
 
             if (ReadyForRefresh())
             {
-                KillIfBonemassNotPresent();
+                if (KillIfBonemassNotPresent())
+                {
+                    return;
+                }
                 CalcMovementVector();
             }
         }
@@ -101,7 +107,7 @@ namespace EnhancedBossesRedone.AttachmentScripts
         /**
          * If we can't find bonemass, end slime.
          */
-        public void KillIfBonemassNotPresent()
+        public bool KillIfBonemassNotPresent()
         {
             if (bonemass == null)
             {
@@ -110,8 +116,9 @@ namespace EnhancedBossesRedone.AttachmentScripts
                 {
                     character.SetHealth(0.0f);
                 }
-                return;
+                return true;
             }
+            return false;
         }
 
         public void MoveToNextPosition()

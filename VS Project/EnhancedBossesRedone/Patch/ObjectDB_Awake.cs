@@ -54,12 +54,14 @@ namespace EnhancedBossesRedone.Patch
 
                 FejdObjectDB = __instance.m_objectDBPrefab;
                 ObjectDB component = FejdObjectDB.GetComponent<ObjectDB>();
+                component.UpdateRegisters();
 
                 Main.Log!.LogMessage("Setting up external attacks.");
                 SetupExternalAttacks(component);
                 Main.Log!.LogMessage("External attacks created successfully.");
                 Main.Log!.LogMessage("Setting up custom status effects...");
                 SetupStatusEffects(component);
+                ObjectDB.instance.CopyOtherDB(component);
                 Main.Log!.LogMessage("Done.");
                 alreadyInvoked = true;
             }

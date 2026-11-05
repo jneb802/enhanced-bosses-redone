@@ -1,183 +1,27 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net462</TargetFramework>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-	<LangVersion>10</LangVersion>
-	<Nullable>enable</Nullable>
-	<RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <TargetFramework>net48</TargetFramework>
+    <LangVersion>10</LangVersion>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <GamePath Condition="'$(GamePath)' == '' And Exists('$(HOME)/Library/Application Support/Steam/steamapps/common/Valheim')">$(HOME)/Library/Application Support/Steam/steamapps/common/Valheim</GamePath>
+    <GamePath Condition="'$(GamePath)' == '' And '$(OS)' == 'Unix'">$(HOME)/.steam/steam/steamapps/common/Valheim</GamePath>
+    <GamePath Condition="'$(GamePath)' == ''">C:/Program Files (x86)/Steam/steamapps/common/Valheim</GamePath>
+    <ManagedPath Condition="'$(ManagedPath)' == '' And Exists('$(GamePath)/Valheim.app')">$(GamePath)/Valheim.app/Contents/Resources/Data/Managed</ManagedPath>
+    <ManagedPath Condition="'$(ManagedPath)' == ''">$(GamePath)/valheim_Data/Managed</ManagedPath>
+    <BepInExCorePath Condition="'$(BepInExCorePath)' == ''">$(GamePath)/BepInEx/core</BepInExCorePath>
+    <PublicizedPath Condition="'$(PublicizedPath)' == ''">$(ManagedPath)/publicized_assemblies</PublicizedPath>
   </PropertyGroup>
-
-  <PropertyGroup>
-    <ModDir>C:\Program Files (x86)\Steam\steamapps\common\Valheim Dev\BepInEx\plugins\EnhancedBossesRedone\</ModDir>	
-  </PropertyGroup>
-	
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn />
-    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <NoWarn />
-    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-  </PropertyGroup>
-
-	<!--
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="xcopy &quot;$(TargetDir)\$(TargetFileName)&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\Valheim Dev\BepInEx\plugins\EnhancedBossesRedone\&quot; /q /y /i" />
-  </Target>
--->
   <ItemGroup>
-    <None Remove="assets\ebr_assetbundle" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.44.1" PrivateAssets="all" />
+    <Reference Include="$(BepInExCorePath)/BepInEx.dll;$(BepInExCorePath)/0Harmony.dll" Private="false" />
+    <Reference Include="$(ManagedPath)/UnityEngine*.dll;$(ManagedPath)/Unity.TextMeshPro.dll" Private="false" />
+    <Reference Include="$(PublicizedPath)/assembly_valheim_publicized.dll;$(PublicizedPath)/assembly_utils_publicized.dll;$(PublicizedPath)/assembly_postprocessing_publicized.dll;$(PublicizedPath)/SoftReferenceableAssets_publicized.dll;$(PublicizedPath)/Splatform_publicized.dll" Private="false" />
+    <Reference Include="$(ManagedPath)/Newtonsoft.Json.dll" Private="false" />
+    <Reference Include="ServerSync" HintPath="DLL/ServerSync.dll" Private="true" />
+    <EmbeddedResource Include="assets/ebr_assetbundle" />
+    <None Update="eb_settings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\..\..\..\Valheim Dev\BepInEx\core\0Harmony.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="assembly_postprocessing">
-      <HintPath>..\..\..\..\Valheim Dev\valheim_Data\Managed\publicized_assemblies\assembly_postprocessing_publicized.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="assembly_utils">
-      <HintPath>..\..\..\..\Valheim Dev\valheim_Data\Managed\publicized_assemblies\assembly_utils_publicized.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="assembly_valheim">
-      <HintPath>..\..\..\..\Valheim Dev\valheim_Data\Managed\publicized_assemblies\assembly_valheim_publicized.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="BepInEx">
-      <HintPath>..\..\..\..\Valheim Dev\BepInEx\core\BepInEx.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>DLL\Newtonsoft.Json.dll</HintPath>
-      <CopyLocal>True</CopyLocal>
-    </Reference>
-    <Reference Include="ServerSync">
-      <HintPath>DLL\ServerSync.dll</HintPath>
-      <CopyLocal>True</CopyLocal>
-    </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>..\..\..\..\Valheim Dev\valheim_Data\Managed\UnityEngine.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="UnityEngine.AnimationModule">
-      <HintPath>..\..\..\valheim_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>..\..\..\..\Valheim Dev\unstripped_corlib\UnityEngine.AssetBundleModule.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="UnityEngine.AudioModule">
-      <HintPath>..\..\..\..\Valheim Dev\unstripped_corlib\UnityEngine.AudioModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\..\..\..\Valheim Dev\valheim_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
-      <HintPath>..\..\..\..\Valheim Dev\valheim_Data\Managed\UnityEngine.InputLegacyModule.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="UnityEngine.JSONSerializeModule">
-      <HintPath>..\..\..\..\Valheim Dev\unstripped_corlib\UnityEngine.JSONSerializeModule.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="UnityEngine.ParticleSystemModule">
-      <HintPath>..\..\..\..\Valheim Dev\unstripped_corlib\UnityEngine.ParticleSystemModule.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\..\..\Valheim Dev\valheim_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
-      <HintPath>..\..\..\..\Valheim Dev\valheim_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>..\..\..\..\Valheim Dev\valheim_Data\Managed\UnityEngine.UI.dll</HintPath>
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="assets\ebr_assetbundle" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="ILRepack" Version="2.0.18" />
-    <PackageReference Include="ILRepack.Lib" Version="2.0.18" />
-    <PackageReference Include="ILRepack.Lib.MSBuild.Task" Version="2.0.18.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="DLL\Newtonsoft.Json.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="DLL\ServerSync.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="eb_settings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Update="System">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Update="System.Core">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Update="System.Data">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Update="System.Drawing">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Update="System.IO.Compression.FileSystem">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Update="System.Numerics">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Update="System.Runtime.Serialization">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Update="System.Xml">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Update="System.Xml.Linq">
-      <CopyLocal>False</CopyLocal>
-    </Reference>
-  </ItemGroup>
-
 </Project>
